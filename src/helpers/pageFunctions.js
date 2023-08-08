@@ -1,4 +1,4 @@
-import { searchCities } from './weatherAPI';
+import { searchCities, getWeatherByCity, getSevenDays } from './weatherAPI';
 
 /**
  * Cria um elemento HTML com as informações passadas
@@ -77,7 +77,7 @@ export function showForecast(forecastList) {
  * Recebe um objeto com as informações de uma cidade e retorna um elemento HTML
  */
 export function createCityElement(cityInfo) {
-  const { name, country, temp, condition, icon /* , url */ } = cityInfo;
+  const { name, country, temp, condition, icon, url } = cityInfo;
 
   const cityElement = createElement('li', 'city');
 
@@ -101,8 +101,15 @@ export function createCityElement(cityInfo) {
   infoContainer.appendChild(tempContainer);
   infoContainer.appendChild(iconElement);
 
+  const buttonElement = createElement('button', 'city-button', 'Ver previsão');
+  buttonElement.addEventListener('click', async () => {
+    const saveDay = await getSevenDays(url);
+    showForecast(saveDay);
+  });
+
   cityElement.appendChild(headingElement);
   cityElement.appendChild(infoContainer);
+  cityElement.appendChild(buttonElement);
 
   return cityElement;
 }
@@ -110,12 +117,30 @@ export function createCityElement(cityInfo) {
 /**
  * Lida com o evento de submit do formulário de busca
  */
-export function handleSearch(event) {
+export async function handleSearch(event) {
   event.preventDefault();
   clearChildrenById('cities');
 
   const searchInput = document.getElementById('search-input');
   const searchValue = searchInput.value;
-  searchCities(searchValue);
-  // seu código aqui
+  const cities = await searchCities(searchValue);
+
+  if (cities.length === 0) {
+    window.alert('Nenhuma cidade encontrada');
+    return;
+  }
+
+  try {
+    const weatherPromises = cities.map((city) => getWeatherByCity(city.url));
+    const weatherData = await Promise.all(weatherPromises);
+    console.log(weatherData);
+
+    weatherData.forEach((data) => {
+      const cityElement = createCityElement(data);
+      const citiesContainer = document.getElementById('cities');
+      citiesContainer.appendChild(cityElement);
+    });
+  } catch (error) {
+    console.error('Erro ao obter informações do clima:', error);
+  }
 }
