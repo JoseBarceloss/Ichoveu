@@ -18,4 +18,11 @@ Este é um projeto de aplicativo de previsão do tempo chamado "iChoveu". Ele pe
 - **API de Previsão do Tempo:** Utilizada para obter dados de previsão do tempo para as cidades pesquisadas.
 - **Vite:** Utilizado para o gerenciamento de dependências e compilação do código JavaScript.
 
-![iChoveu](https://i.pinimg.com/originals/81/49/ff/8149ffb38813111029c7d836251240de.gif)
+---
+
+<div align="center">
+  <h4>🌧️ Agradeço pela oportunidade de compartilhar este exercício! Espero que tenham gostado! 🌧️</h4>
+  <img src="https://i.pinimg.com/originals/81/49/ff/8149ffb38813111029c7d836251240de.gif" ">
+</div>
+
+
